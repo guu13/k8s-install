@@ -1,0 +1,8 @@
+kind: BGPPeer
+apiVersion: projectcalico.org/v3
+metadata:
+  name: rr-mesh
+spec:
+  # 规则2：route reflectors 之间也建立连接
+  nodeSelector: has(i-am-a-rr)
+  peerSelector: has(i-am-a-rr)

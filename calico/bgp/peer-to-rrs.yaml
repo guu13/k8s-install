@@ -1,0 +1,8 @@
+kind: BGPPeer
+apiVersion: projectcalico.org/v3
+metadata:
+  name: peer-to-rrs
+spec:
+  # 规则1：普通 bgp node 与 rr 建立连接
+  nodeSelector: !has(i-am-a-rr)
+  peerSelector: has(i-am-a-rr)

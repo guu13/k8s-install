@@ -1,0 +1,26 @@
+apiVersion: projectcalico.org/v3
+kind: Node
+metadata:
+  annotations:
+    projectcalico.org/kube-labels: '{"beta.kubernetes.io/arch":"amd64","beta.kubernetes.io/os":"linux","kubernetes.io/arch":"amd64","kubernetes.io/hostname":"k8s-node2","kubernetes.io/os":"linux"}'
+  creationTimestamp: null
+  labels:
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/os: linux
+    kubernetes.io/arch: amd64
+    kubernetes.io/hostname: k8s-node2
+    kubernetes.io/os: linux
+    # 增加标签，将rr标签置为true
+    i-am-a-rr: true
+  name: k8s-node2
+spec:
+  bgp:
+    ipv4Address: 10.211.55.19/24
+    # 增加标签，确保同一个反射簇配置ID一致，即rr-node1与rr-node2一致，用于冗余和防环
+    routeReflectorClusterID: 224.0.0.1
+  orchRefs:
+  - nodeName: k8s-node2
+    orchestrator: k8s
+status:
+  podCIDRs:
+  - 100.233.65.0/24
