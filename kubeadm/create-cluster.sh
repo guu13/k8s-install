@@ -65,8 +65,8 @@ helm install cilium cilium/cilium --version 1.11.0 \
 
 
 
-#####   #############
---set loadBalancer.acceleration=native \
+#####   ############# 
+--set tunnel=disabled  native routing 模式， 要配置 ipv4NativeRoutingCIDR  \
 level=fatal msg="Error while creating daemon" error="invalid daemon configuration: native routing cidr must be configured with option 
 --ipv4-native-routing-cidr in combination with --enable-ipv4-masquerade --tunnel=disabled --ipam=cluster-pool --enable-ipv4=true" subsys=daemon
 #############
