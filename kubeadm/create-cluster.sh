@@ -1,3 +1,6 @@
+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
+
+
 kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --config=kubeadm-config.yaml --upload-certs -v=10 | tee kubeadm-init.log
 
 1.15 kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --config=kubeadm-config.yaml --upload-certs | tee kubeadm-init.log
@@ -32,15 +35,21 @@ kubectl taint node --all node-role.kubernetes.io/master-
 kubeadm token create --print-join-command
 
 # ipv4 默认是 封装模式（--set tunnel=vxlan ）， 支持 Vxlan 和 Geneve 
+# Q: --set bpf.masquerade=true, 跳过 网络协议栈 启用bpf， 
+# A: level=info msg="BPF host routing requires enable-bpf-masquerade. Falling back to legacy host routing (enable-host-legacy-routing=true)." subsys=daemon
+
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
     --namespace kube-system \
     --set debug.enabled=true \
     --set operator.replicas=1 \
     --set devices=enp0s5 \
+    --set bpf.masquerade=true \
     --set kubeProxyReplacement=strict \
     --set k8sServiceHost=10.211.55.34 \
-    --set k8sServicePort=6443 \
+    --set k8sServicePort=6443 
+
+    \
     --set hubble.relay.enabled=true \
     --set hubble.ui.enabled=true 
 
