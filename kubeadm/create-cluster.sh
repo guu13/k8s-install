@@ -31,7 +31,7 @@ kubectl taint node --all node-role.kubernetes.io/master-
 
 kubeadm token create --print-join-command
 
-# ipv4 native routing Vxlan Geneve 模式
+# ipv4 默认是 封装模式（--set tunnel=vxlan ）， 支持 Vxlan 和 Geneve 
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
     --namespace kube-system \
