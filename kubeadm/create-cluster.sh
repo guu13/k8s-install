@@ -37,7 +37,6 @@ kubeadm token create --print-join-command
 # ipv4 默认是 封装模式（--set tunnel=vxlan ）， 支持 Vxlan 和 Geneve 
 # Q: --set bpf.masquerade=true, 跳过 网络协议栈 启用bpf， 
 # A: level=info msg="BPF host routing requires enable-bpf-masquerade. Falling back to legacy host routing (enable-host-legacy-routing=true)." subsys=daemon
-
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
     --namespace kube-system \
@@ -49,11 +48,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
     --set k8sServiceHost=10.211.55.34 \
     --set k8sServicePort=6443 
 
-    \
-    --set hubble.relay.enabled=true \
-    --set hubble.ui.enabled=true 
-
-# ipv4 native routing 模式
+# ipv4 native routing ， hybrid 模式
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
  --namespace kube-system \
@@ -68,10 +63,52 @@ helm install cilium cilium/cilium --version 1.11.0 \
  --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
  --set ipam.operator.clusterPoolIPv4MaskSize=26 \
  --set k8sServiceHost=10.211.55.34 \
- --set k8sServicePort=6443 \
- --set hubble.relay.enabled=true \
- --set hubble.ui.enabled=true 
+ --set k8sServicePort=6443 
 
+# ipv4 native routing ， DSR 模式
+helm delete cilium -nkube-system 
+helm install cilium cilium/cilium --version 1.11.0 \
+ --namespace kube-system \
+ --set debug.enabled=true \
+ --set operator.replicas=1 \
+ --set devices=enp0s5 \
+ --set tunnel=disabled \
+ --set autoDirectNodeRoutes=true \
+ --set kubeProxyReplacement=strict \
+ --set loadBalancer.mode=hybrid \
+ --set ipv4NativeRoutingCIDR=172.200.0.0/16 \
+ --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
+ --set ipam.operator.clusterPoolIPv4MaskSize=26 \
+ --set k8sServiceHost=10.211.55.34 \
+ --set k8sServicePort=6443 
+
+ # ipv4 native routing ， XDP 模式
+helm delete cilium -nkube-system 
+helm install cilium cilium/cilium --version 1.11.0 \
+ --namespace kube-system \
+ --set debug.enabled=true \
+ --set operator.replicas=1 \
+ --set devices=enp0s5 \
+ --set tunnel=disabled \
+ --set autoDirectNodeRoutes=true \
+ --set kubeProxyReplacement=strict \
+ --set loadBalancer.acceleration=native \
+ --set loadBalancer.mode=hybrid \
+ --set ipv4NativeRoutingCIDR=172.200.0.0/16 \
+ --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
+ --set ipam.operator.clusterPoolIPv4MaskSize=26 \
+ --set k8sServiceHost=10.211.55.34 \
+ --set k8sServicePort=6443 
+
+ --set endpointRoutes.enabled=true \
+
+# hubble
+helm upgrade cilium cilium/cilium --version 1.11.0 \
+--namespace kube_system \
+--reuse-values \
+--set hubble.listenAddress=":4244" \
+--set hubble.relay.enabled=true \
+--set hubble.ui.enabled=true
 
 
 #####   ############# 
