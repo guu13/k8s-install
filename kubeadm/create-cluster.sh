@@ -101,6 +101,9 @@ helm install cilium cilium/cilium --version 1.11.0 \
 
  --set endpointRoutes.enabled=true \
 
+ ### BPF sockmap支持加速本地进程通信。 可通过选项 --sockops-enable 
+ --set sockops.enabled=true
+
 # hubble
 helm upgrade cilium cilium/cilium --version 1.11.0 \
 --namespace kube_system \
