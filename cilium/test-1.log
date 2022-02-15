@@ -1,0 +1,54 @@
+
+### 测试 从30节点上访问在34节点上的pod， curl 172.200.0.19 
+
+
+### 30节点， kubectl exec -it -n kube-system cilium-kzm5r -- cilium monitor --type trace -vv > test-30.log
+### 30节点上的日志看， 请求是经过设备 cilium_host （172.200.0.122）作为 src 地址。 经过设备 cilium_vxlan 封装overlay 。
+
+------------------------------------------------------------------------------
+Ethernet	{Contents=[..14..] Payload=[..62..] SrcMAC=46:ac:b4:32:88:40 DstMAC=7e:31:0e:ce:e6:e2 EthernetType=IPv4 Length=0}
+IPv4	{Contents=[..20..] Payload=[..40..] Version=4 IHL=5 TOS=0 Length=60 Id=14833 Flags=DF FragOffset=0 TTL=64 Protocol=TCP Checksum=42669 SrcIP=172.200.0.122 DstIP=172.200.0.19 Options=[] Padding=[]}
+TCP	{Contents=[..40..] Payload=[] SrcPort=46886 DstPort=80(http) Seq=765106604 Ack=0 DataOffset=10 FIN=false SYN=true RST=false PSH=false ACK=false URG=false ECE=false CWR=false NS=false Window=64860 Checksum=23116 Urgent=0 Options=[..5..] Padding=[]}
+CPU 01: MARK 0x9057548d FROM 174 to-overlay: 74 bytes (74 captured), state new, interface cilium_vxlan, , identity remote-node->unknown, orig-ip 0.0.0.0
+------------------------------------------------------------------------------
+Ethernet	{Contents=[..14..] Payload=[..118..] SrcMAC=46:ac:b4:32:88:40 DstMAC=7e:31:0e:ce:e6:e2 EthernetType=IPv4 Length=0}
+IPv4	{Contents=[..20..] Payload=[..98..] Version=4 IHL=5 TOS=0 Length=128 Id=14835 Flags=DF FragOffset=0 TTL=64 Protocol=TCP Checksum=42599 SrcIP=172.200.0.122 DstIP=172.200.0.19 Options=[] Padding=[]}
+TCP	{Contents=[..32..] Payload=[..66..] SrcPort=46886 DstPort=80(http) Seq=765106605 Ack=2964741165 DataOffset=8 FIN=false SYN=false RST=false PSH=true ACK=true URG=false ECE=false CWR=false NS=false Window=507 Checksum=23184 Urgent=0 Options=[TCPOption(NOP:), TCPOption(NOP:), TCPOption(Timestamps:807949993/2730343931 0x302856a9a2bdbdfb)] Padding=[]}
+  Packet has been truncated
+  Failed to decode layer: No decoder for layer type Payload
+CPU 03: MARK 0x9057548d FROM 174 to-overlay: 142 bytes (128 captured), state new, interface cilium_vxlan, , identity remote-node->unknown, orig-ip 0.0.0.0
+
+
+
+#### 34节点， kubectl exec -it -n kube-system cilium-d49kw -- cilium monitor --type trace -vv > test-34.log
+#### 直接到了请求的pod（172.200.0.19）在主机测的设备上（lxc3427cf38d04e）
+
+------------------------------------------------------------------------------
+Ethernet  {Contents=[..14..] Payload=[..62..] SrcMAC=62:92:66:06:27:b1 DstMAC=ea:3c:02:bf:42:d5 EthernetType=IPv4 Length=0}
+IPv4  {Contents=[..20..] Payload=[..40..] Version=4 IHL=5 TOS=0 Length=60 Id=14833 Flags=DF FragOffset=0 TTL=63 Protocol=TCP Checksum=42925 SrcIP=172.200.0.122 DstIP=172.200.0.19 Options=[] Padding=[]}
+TCP {Contents=[..40..] Payload=[] SrcPort=46886 DstPort=80(http) Seq=765106604 Ack=0 DataOffset=10 FIN=false SYN=true RST=false PSH=false ACK=false URG=false ECE=false CWR=false NS=false Window=64860 Checksum=60201 Urgent=0 Options=[..5..] Padding=[]}
+CPU 03: MARK 0x0 FROM 3715 to-endpoint: 74 bytes (74 captured), state new, interface lxc3427cf38d04e, , identity remote-node->17704, orig-ip 172.200.0.122, to endpoint 3715
+------------------------------------------------------------------------------
+Ethernet  {Contents=[..14..] Payload=[..62..] SrcMAC=ea:3c:02:bf:42:d5 DstMAC=62:92:66:06:27:b1 EthernetType=IPv4 Length=0}
+IPv4  {Contents=[..20..] Payload=[..40..] Version=4 IHL=5 TOS=0 Length=60 Id=0 Flags=DF FragOffset=0 TTL=64 Protocol=TCP Checksum=57502 SrcIP=172.200.0.19 DstIP=172.200.0.122 Options=[] Padding=[]}
+TCP {Contents=[..40..] Payload=[] SrcPort=80(http) DstPort=46886 Seq=2964741164 Ack=765106605 DataOffset=10 FIN=false SYN=true RST=false PSH=false ACK=true URG=false ECE=false CWR=false NS=false Window=64308 Checksum=23116 Urgent=0 Options=[..5..] Padding=[]}
+CPU 03: MARK 0x67b6efa FROM 3715 to-overlay: 74 bytes (74 captured), state new, interface cilium_vxlan, , identity 17704->unknown, orig-ip 0.0.0.0
+------------------------------------------------------------------------------
+Ethernet  {Contents=[..14..] Payload=[..54..] SrcMAC=62:92:66:06:27:b1 DstMAC=ea:3c:02:bf:42:d5 EthernetType=IPv4 Length=0}
+IPv4  {Contents=[..20..] Payload=[..32..] Version=4 IHL=5 TOS=0 Length=52 Id=14834 Flags=DF FragOffset=0 TTL=63 Protocol=TCP Checksum=42932 SrcIP=172.200.0.122 DstIP=172.200.0.19 Options=[] Padding=[]}
+TCP {Contents=[..32..] Payload=[] SrcPort=46886 DstPort=80(http) Seq=765106605 Ack=2964741165 DataOffset=8 FIN=false SYN=false RST=false PSH=false ACK=true URG=false ECE=false CWR=false NS=false Window=507 Checksum=42871 Urgent=0 Options=[TCPOption(NOP:), TCPOption(NOP:), TCPOption(Timestamps:807949993/2730343931 0x302856a9a2bdbdfb)] Padding=[]}
+CPU 03: MARK 0x0 FROM 3715 to-endpoint: 66 bytes (66 captured), state established, interface lxc3427cf38d04e, , identity remote-node->17704, orig-ip 172.200.0.122, to endpoint 3715
+------------------------------------------------------------------------------
+Ethernet  {Contents=[..14..] Payload=[..118..] SrcMAC=62:92:66:06:27:b1 DstMAC=ea:3c:02:bf:42:d5 EthernetType=IPv4 Length=0}
+IPv4  {Contents=[..20..] Payload=[..98..] Version=4 IHL=5 TOS=0 Length=128 Id=14835 Flags=DF FragOffset=0 TTL=63 Protocol=TCP Checksum=42855 SrcIP=172.200.0.122 DstIP=172.200.0.19 Options=[] Padding=[]}
+TCP {Contents=[..32..] Payload=[..66..] SrcPort=46886 DstPort=80(http) Seq=765106605 Ack=2964741165 DataOffset=8 FIN=false SYN=false RST=false PSH=true ACK=true URG=false ECE=false CWR=false NS=false Window=507 Checksum=25839 Urgent=0 Options=[TCPOption(NOP:), TCPOption(NOP:), TCPOption(Timestamps:807949993/2730343931 0x302856a9a2bdbdfb)] Padding=[]}
+  Packet has been truncated
+  Failed to decode layer: No decoder for layer type Payload
+CPU 03: MARK 0x0 FROM 3715 to-endpoint: 142 bytes (128 captured), state established, interface lxc3427cf38d04e, , identity remote-node->17704, orig-ip 172.200.0.122, to endpoint 3715
+------------------------------------------------------------------------------
+Ethernet  {Contents=[..14..] Payload=[..118..] SrcMAC=ea:3c:02:bf:42:d5 DstMAC=62:92:66:06:27:b1 EthernetType=IPv4 Length=0}
+IPv4  {Contents=[..20..] Payload=[..98..] Version=4 IHL=5 TOS=0 Length=290 Id=19478 Flags=DF FragOffset=0 TTL=64 Protocol=TCP Checksum=37794 SrcIP=172.200.0.19 DstIP=172.200.0.122 Options=[] Padding=[]}
+TCP {Contents=[..32..] Payload=[..66..] SrcPort=80(http) DstPort=46886 Seq=2964741165 Ack=765106681 DataOffset=8 FIN=false SYN=false RST=false PSH=true ACK=true URG=false ECE=false CWR=false NS=false Window=502 Checksum=23346 Urgent=0 Options=[TCPOption(NOP:), TCPOption(NOP:), TCPOption(Timestamps:2730343932/807949993 0xa2bdbdfc302856a9)] Padding=[]}
+  Packet has been truncated
+  Failed to decode layer: No decoder for layer type Payload
+CPU 03: MARK 0x67b6efa FROM 3715 to-overlay: 304 bytes (128 captured), state new, interface cilium_vxlan, , identity 17704->unknown, orig-ip 0.0.0.0

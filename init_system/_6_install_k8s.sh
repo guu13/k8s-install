@@ -16,3 +16,16 @@ yum list kubeadm --showduplicates | sort -r
 yum remove -y kubeadm kubelet kubectl 
 yum install -y kubeadm-1.20.10 kubelet-1.20.10 kubectl-1.20.10
 systemctl enable kubelet && systemctl start kubelet
+
+
+
+gemfield@master:~$ sudo apt-get update && sudo apt-get install -y ca-certificates curl software-properties-common apt-transport-https curl
+gemfield@master:~$ curl -s https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add -
+
+gemfield@master:~$ sudo tee /etc/apt/sources.list.d/kubernetes.list <<EOF 
+deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
+EOF
+
+gemfield@master:~$ sudo apt-get update
+gemfield@master:~$ sudo apt-get install -y kubelet kubeadm kubectl
+gemfield@master:~$ sudo apt-mark hold kubelet kubeadm kubectl
