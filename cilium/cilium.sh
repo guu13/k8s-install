@@ -1,4 +1,8 @@
 
+# 
+# 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
+#
+
 # cilium-health ip 
 kubectl exec -it -n kube-system cilium-g2lwk -- ip netns exec cilium-health ip addr
 
@@ -6,7 +10,7 @@ kubectl exec -it -n kube-system cilium-g2lwk -- ip netns exec cilium-health ip a
 #### monitor event type ： agent capture debug drop l7 policy-verdict recorder trace
 
 kubectl exec -it -n kube-system cilium-6svpw -- cilium monitor --type trace -vv
-kubectl exec -it -n kube-system cilium-6svpw -- cilium monitor -type trace -vv -hex true
+kubectl exec -it -n kube-system cilium-6svpw -- cilium monitor -type trace -vv -hex
 
 
 level=info msg="Initializing dissection cache..." subsys=monitor
@@ -29,6 +33,7 @@ helm delete cilium -nkube-system
 helm install cilium cilium/cilium --version 1.11.0 \
     --namespace kube-system \
     --set debug.enabled=true \
+    --set debug.verbose=datapath \
     --set operator.replicas=1 \
     --set devices=enp0s5 \
     --set hubble.relay.enabled=true \
@@ -44,6 +49,7 @@ helm delete cilium -nkube-system
 helm install cilium cilium/cilium --version 1.11.0 \
  --namespace kube-system \
  --set debug.enabled=true \
+ --set debug.verbose=datapath \
  --set operator.replicas=1 \
  --set devices=enp0s5 \
  --set tunnel=disabled \

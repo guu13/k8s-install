@@ -1,4 +1,4 @@
-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
+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
 
 kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --config=kubeadm-config.yaml --upload-certs -v=10 | tee kubeadm-init.log
 
@@ -33,3 +33,5 @@ kubectl taint node --all node-role.kubernetes.io/master-
 
 kubeadm token create --print-join-command
 
+
+kubeadm join 10.211.55.34:6443 --token izxy19.yhi9dgj1qsuddwnj --discovery-token-ca-cert-hash sha256:cf4d8307cb18cb0cc0663979f0192d5f3443241e321d40e95d77499969b2843c 
