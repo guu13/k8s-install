@@ -29,6 +29,19 @@ Failed to decode layer: No decoder for layer type Payload
 # ipv4 默认是 封装模式（--set tunnel=vxlan ）， 支持 Vxlan 和 Geneve 
 # Q: --set bpf.masquerade=true, 跳过 网络协议栈 启用bpf， 
 # A: level=info msg="BPF host routing requires enable-bpf-masquerade. Falling back to legacy host routing (enable-host-legacy-routing=true)." subsys=daemon
+
+helm delete cilium -nkube-system 
+helm install cilium cilium/cilium --version 1.11.0 \
+    --namespace kube-system \
+    --set debug.enabled=true \
+    --set debug.verbose=datapath \
+    --set operator.replicas=1 \
+    --set devices=enp0s5 \
+    --set bpf.masquerade=true \
+    --set kubeProxyReplacement=strict \
+    --set k8sServiceHost=10.211.55.34 \
+    --set k8sServicePort=6443 
+
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
     --namespace kube-system \
@@ -55,6 +68,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
  --set tunnel=disabled \
  --set autoDirectNodeRoutes=true \
  --set kubeProxyReplacement=strict \
+ --set sockops.enabled=true \
  --set loadBalancer.mode=hybrid \
  --set ipv4NativeRoutingCIDR=172.200.0.0/16 \
  --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
@@ -97,6 +111,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
  --set k8sServiceHost=10.211.55.34 \
  --set k8sServicePort=6443 
 
+ // ### Enable use of per endpoint routes instead of routing via the cilium_host interface.
  --set endpointRoutes.enabled=true \
 
  ### BPF sockmap支持加速本地进程通信。 可通过选项 --sockops-enable 
