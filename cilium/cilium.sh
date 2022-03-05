@@ -39,27 +39,13 @@ helm install cilium cilium/cilium --version 1.11.0 \
     --set devices=enp0s5 \
     --set bpf.masquerade=true \
     --set kubeProxyReplacement=strict \
-    --set k8sServiceHost=10.211.55.34 \
-    --set k8sServicePort=6443 
-
-helm delete cilium -nkube-system 
-helm install cilium cilium/cilium --version 1.11.0 \
-    --namespace kube-system \
-    --set debug.enabled=true \
-    --set debug.verbose=datapath \
-    --set operator.replicas=1 \
-    --set devices=enp0s5 \
-    --set hubble.relay.enabled=true \
-    --set hubble.ui.enabled=true \
-    --set bpf.masquerade=true \
-    --set kubeProxyReplacement=strict \
     --set sockops.enabled=true \
     --set k8sServiceHost=10.211.55.34 \
     --set k8sServicePort=6443 
 
 # ipv4 native routing ， hybrid 模式
 helm delete cilium -nkube-system 
-helm install cilium cilium/cilium --version 1.11.0 \
+helm install cilium cilium/cilium --version 1.11.1 \
  --namespace kube-system \
  --set debug.enabled=true \
  --set debug.verbose=datapath \
@@ -86,7 +72,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
  --set tunnel=disabled \
  --set autoDirectNodeRoutes=true \
  --set kubeProxyReplacement=strict \
- --set loadBalancer.mode=hybrid \
+ --set loadBalancer.mode=dsr \
  --set ipv4NativeRoutingCIDR=172.200.0.0/16 \
  --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
  --set ipam.operator.clusterPoolIPv4MaskSize=26 \
@@ -115,6 +101,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
  --set endpointRoutes.enabled=true \
 
  ### BPF sockmap支持加速本地进程通信。 可通过选项 --sockops-enable 
+ ####  socket options acceleration.
  --set sockops.enabled=true
 
 # hubble

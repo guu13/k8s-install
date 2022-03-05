@@ -20,6 +20,6 @@ sudo docker run -d \
 
 
 
-  https://github.91chi.fun//https://github.com/guu13/k8s-install.git
+https://github.91chi.fun//https://github.com/guu13/k8s-install.git
 
 https://github.91chi.fun//https://github.com/cilium/hubble/releases/download/v0.9.0/hubble-linux-amd64.tar.gz

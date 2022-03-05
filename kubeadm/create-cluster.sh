@@ -1,4 +1,4 @@
-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
+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
 
 kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --config=kubeadm-config.yaml --upload-certs -v=10 | tee kubeadm-init.log
 
