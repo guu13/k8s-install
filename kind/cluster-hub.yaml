@@ -2,6 +2,10 @@
 #一共两个节点，一个主节点，一个从节点。	
 kind: Cluster	
 apiVersion: kind.x-k8s.io/v1alpha4
+name: cluster-hub
+networking:
+  podSubnet: "10.100.0.0/16"
+  serviceSubnet: "172.100.0.0/16"
 nodes:	
 - role: control-plane	
 - role: worker

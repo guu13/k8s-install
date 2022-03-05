@@ -1,0 +1,1 @@
+kind create cluster --config my-cluster-multi-node.yaml --name hub-cluster
