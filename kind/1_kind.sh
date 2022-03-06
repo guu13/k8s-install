@@ -1,3 +1,4 @@
+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
 
 kind delete cluster --name cluster-hub  
 
