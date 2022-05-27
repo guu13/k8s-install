@@ -6,6 +6,8 @@ kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --
 #1.14 kubeadm init --config=kubeadm-config.yaml --experimental-upload-certs | tee kubeadm-init.log
 
 
+kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+
 ## 172.100.0.0/16 (172.100.0.1 , 172.100.255.254, 65534)
 ## 172.200.0.0/16 (172.200.0.1 , 172.200.255.254, 65534)
 ## 

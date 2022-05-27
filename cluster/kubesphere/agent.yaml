@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: cluster-agent
+  namespace: kubesphere-system
+spec:
+  selector:
+    matchLabels:
+      app: agent
+      app.kubernetes.io/part-of: tower
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: agent
+        app.kubernetes.io/part-of: tower
+    spec:
+      containers:
+      - command:
+        - /agent
+        - --name=whq-kind-cluster-member1
+        - --token=927b6e6fcc7edc0eccf880bcddc96c3729ba9d199a483fe20172c31c2ae27c8b
+        - --proxy-server=http://yytest:32706
+        - --keepalive=10s
+        - --kubesphere-service=ks-apiserver.kubesphere-system.svc:80
+        - --kubernetes-service=kubernetes.default.svc:443
+        - --v=0
+        image: kubesphere/tower:v0.2.0
+        name: agent
+        resources:
+          limits:
+            cpu: "1"
+            memory: 200M
+          requests:
+            cpu: 100m
+            memory: 100M
+      serviceAccountName: kubesphere
+status: {}
+

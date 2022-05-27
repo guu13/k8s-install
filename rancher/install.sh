@@ -12,9 +12,8 @@ rancher/rancher:latest
 
 
 
-docker run -d --restart=unless-stopped --privileged  -p 8080:80 -p 8443:443 -v /var/lib/rancher2.5:/var/lib/rancher rancher/rancher:v2.5.12 
 
-docker run -d --restart=unless-stopped --privileged  -p 80:80 -p 443:443 -v /var/lib/rancher:/var/lib/rancher rancher/rancher:latest 
+docker run --name rancher -d --restart=unless-stopped --privileged  -p 8080:80 -p 8443:443 -v /var/lib/rancher:/var/lib/rancher rancher/rancher:latest 
 
 
 
