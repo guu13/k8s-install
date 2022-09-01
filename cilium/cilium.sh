@@ -45,7 +45,7 @@ helm install cilium cilium/cilium --version 1.11.0 \
 
 # ipv4 native routing ， hybrid 模式
 helm delete cilium -nkube-system 
-helm install cilium cilium/cilium --version 1.11.1 \
+helm install cilium cilium/cilium --version 1.11.0 \
  --namespace kube-system \
  --set debug.enabled=true \
  --set debug.verbose=datapath \

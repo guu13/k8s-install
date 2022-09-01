@@ -113,3 +113,21 @@ helm install k8ssandra -n k2 ./
 kubectl create namespace k2
 kubectl create secret generic cassandra-admin-secret --from-literal=username=cassandra-admin --from-literal=password=cassandra-admin-password -n k2
 helm install k2 -n k2 ./
+
+
+
+----------- podname.clusterID.svcname.namespace.svc.clusterset.local
+
+dig cassandra-0.cassandra.db.svc.cluster.local
+
+dig cassandra.db.svc.clusterset.local
+
+dig cassandra-0.dc3891.cassandra.db.svc.clusterset.local
+
+
+kubectl run cqlsh --image=nuvo/docker-cqlsh cqlsh cassandra 9042
+
+
+-----------------
+
+

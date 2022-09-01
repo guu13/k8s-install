@@ -10,7 +10,7 @@ yum-config-manager \
 yum list docker-ce --showduplicates | sort -r
 
 # 安装docker-ce
-yum install -y docker-ce-19.03.15-3.el8
+yum install -y docker-ce-20.03.17-3.el8
 
 ## 创建 /etc/docker 目录
 mkdir -p /etc/docker
@@ -19,16 +19,7 @@ mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2",
-  "storage-opts": [
-    "overlay2.override_kernel_check=true"
-  ],
-  "registry-mirrors": ["https://uyah70su.mirror.aliyuncs.com"],
-  "group": "docker"
+  "registry-mirrors": ["http://hub-mirror.c.163.com", "https://docker.mirrors.ustc.edu.cn"]
 }
 EOF
 #注意，由于国内拉取镜像较慢，配置文件最后追加了阿里云镜像加速配置。

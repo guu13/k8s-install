@@ -29,6 +29,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 
 kubectl taint node --all node-role.kubernetes.io/master-
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 ### -- cilium ipv6
 kubeadm init --skip-phases=addon/kube-proxy --pod-network-cidr=172.200.0.0/16,fd74:ca9b:0172:0019::/110  --service-cidr=172.100.0.0/16,fd74:ca9b:0172:0018::/110  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
@@ -46,3 +47,6 @@ alias kdel="kubectl delete po -n"
 alias klog="kubectl logs -f -n"
 alias kexec="kubectl exec -it -n"
 alias kdesc="kubectl describe po -n"
+
+
+#####################  
