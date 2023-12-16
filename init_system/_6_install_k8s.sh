@@ -13,8 +13,8 @@ yum list kubeadm --showduplicates | sort -r
 
 
 #安装kubeadm、kubelet、kubectl,注意这里默认安装当前最新版本v1.14.1:
-yum remove -y kubeadm kubelet kubectl 
-yum install -y kubeadm-1.20.10 kubelet-1.20.10 kubectl-1.20.10
+dnf remove -y kubeadm kubelet kubectl 
+dnf install -y kubeadm-1.26.7 kubelet-1.26.7 kubectl-1.26.7
 systemctl enable kubelet && systemctl start kubelet
 
 
@@ -29,3 +29,17 @@ EOF
 gemfield@master:~$ sudo apt-get update
 gemfield@master:~$ sudo apt-get install -y kubelet kubeadm kubectl
 gemfield@master:~$ sudo apt-mark hold kubelet kubeadm kubectl
+
+
+
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://mirrors.cloud.aliyuncs.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=http://mirrors.cloud.aliyuncs.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+

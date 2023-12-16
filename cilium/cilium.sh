@@ -145,3 +145,6 @@ helm install cilium cilium/cilium --version 1.11.0 \
 
 kubectl exec -it -n kube-system cilium-9b5s2 -- cilium status --verbose
 kubectl exec -it -n kube-system cilium-9b5s2 -- cilium service list
+
+
+

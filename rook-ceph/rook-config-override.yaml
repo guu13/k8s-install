@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: rook-config-override
+  namespace: rook-ceph # namespace:cluster
+data:
+  config: |
+    [global]
+    #public_network = 10.211.55.0/24
+    #cluster_network = 10.37.132.0/24
+    #ms_manage_type = async+posix
+    #ms_public_type = async+rdma
+    #ms_cluster_type = async+rdma
+    ms_cluster_type = async+rdma
+    ms_async_rdma_device_name = rxe_55

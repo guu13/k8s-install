@@ -6,6 +6,7 @@ modprobe -- ip_vs_rr
 modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
 modprobe -- nf_conntrack_ipv4
+modprobe -- br_netfilter
 EOF
 #执行脚本
 chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules && lsmod | grep -e ip_vs -e nf_conntrack_ipv4
@@ -22,9 +23,10 @@ modprobe -- ip_vs
 modprobe -- ip_vs_rr
 modprobe -- ip_vs_wrr
 modprobe -- ip_vs_sh
-modprobe -- nf_conntrack_ipv4
+modprobe -- nf_conntrack
+modprobe -- br_netfilter
 EOF
 #执行脚本
-chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules && lsmod | grep -e ip_vs -e nf_conntrack_ipv4
+chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/modules/ipvs.modules 
 #安装相关管理工具
-apt install ipset ipvsadm -y
+dnf install ipset ipvsadm -y

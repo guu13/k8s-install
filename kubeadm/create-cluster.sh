@@ -6,21 +6,29 @@ kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16 --
 #1.14 kubeadm init --config=kubeadm-config.yaml --experimental-upload-certs | tee kubeadm-init.log
 
 
-kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --config=kubeadm-config.yaml
 
 ## 172.100.0.0/16 (172.100.0.1 , 172.100.255.254, 65534)
 ## 172.200.0.0/16 (172.200.0.1 , 172.200.255.254, 65534)
 ## 
-kubeadm init --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+kubeadm init --pod-network-cidr=10.244.0.0/16  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.23.10
+
+kubeadm init --pod-network-cidr=10.244.0.0/16  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.26.7
+
+kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.26.7
 
 
-kubeadm config images pull --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
+kubeadm config images pull --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.26.7
 
 
 ### -- cilium ipv4
 kubeadm init --skip-phases=addon/kube-proxy --pod-network-cidr=172.200.0.0/16  --service-cidr=172.100.0.0/16  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
 
 
+crictl pull registry-vpc.cn-hangzhou.aliyuncs.com/google_containers/pause:3.9
+crictl pull registry-vpc.cn-zhangjiakou.aliyuncs.com/guu13/terway:latest
+
+yum install iproute-tc -y
 
 sudo rm -rf $HOME/.kube/*
 sudo mkdir -p $HOME/.kube

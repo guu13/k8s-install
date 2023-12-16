@@ -1,5 +1,11 @@
-kubectl get ns submariner-operator -ojson > t.json
+kubectl get ns rook-ceph -ojson > t.json
 
 kubectl proxy --port=8081
 
-curl -k -H "Content-Type: application/json" -X PUT --data-binary @t.json  http://127.0.0.1:8081/api/v1/namespaces/submariner-operator/finalize
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @t.json  http://127.0.0.1:8081/api/v1/namespaces/rook-ceph/finalize
+
+
+
+
+--- 
+yum install iproute-tc socat -y 

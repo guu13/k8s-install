@@ -1,0 +1,18 @@
+1. RDMA 不成功
+
+ceph version 16.2.10 (45fa1a083152e41a408d15505f594ec5f1b4fe17) pacific (stable)
+ 1: /lib64/libpthread.so.0(+0x12cf0) [0x7f38497f3cf0]
+ 2: gsignal()
+ 3: abort()
+ 4: ceph-osd(+0x63e808) [0x556400e6d808]
+ 5: (RDMAStack::RDMAStack(ceph::common::CephContext*)+0x55f) [0x5564016fe60f]
+ 6: (NetworkStack::create(ceph::common::CephContext*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)+0x350) [0x5564016f2d30]
+ 7: (AsyncMessenger::AsyncMessenger(ceph::common::CephContext*, entity_name_t, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, unsigned long)+0xe78) [0x5564016e61f8]
+ 8: (Messenger::create(ceph::common::CephContext*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, entity_name_t, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, unsigned long)+0x10b) [0x5564016d85db]
+ 9: main()
+ 10: __libc_start_main()
+ 11: _start()
+ NOTE: a copy of the executable, or `objdump -rdS <executable>` is needed to interpret this.
+
+
+ 2. 

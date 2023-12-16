@@ -10,7 +10,7 @@ yum-config-manager \
 yum list docker-ce --showduplicates | sort -r
 
 # 安装docker-ce
-yum install -y docker-ce-20.03.17-3.el8
+yum install -y docker-ce-20.10.23-3.el8
 
 ## 创建 /etc/docker 目录
 mkdir -p /etc/docker
