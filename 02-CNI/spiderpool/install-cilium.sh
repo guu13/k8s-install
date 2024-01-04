@@ -11,7 +11,9 @@ helm install cilium cilium/cilium --version 1.14.3 \
 --set kubeProxyReplacement=strict \
 --set k8sServiceHost=10.211.55.3 \
 --set k8sServicePort=6443 \
---set cni.exclusive=false
+--set cni.exclusive=false \
+--set debug.enabled=true \
+--set debug.verbose=flow,kvstore,envoy,datapath,policy
 
 helm uninstall spiderpool --namespace kube-system
 helm install spiderpool spiderpool/spiderpool -n kube-system \
@@ -34,6 +36,7 @@ spec:
     - kube-system/whq-cni-conf
 EOF
 
+kubectl delete SpiderMultusConfig -n kube-system   whq-cni-conf 
 cat <<EOF | kubectl apply -f -
 apiVersion: spiderpool.spidernet.io/v2beta1
 kind: SpiderMultusConfig
