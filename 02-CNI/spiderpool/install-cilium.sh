@@ -13,10 +13,10 @@ helm install cilium cilium/cilium --version 1.14.3 \
 --set k8sServicePort=6443 \
 --set cni.exclusive=false \
 --set debug.enabled=true \
---set debug.verbose=flow,kvstore,envoy,datapath,policy
+--set debug.verbose='flow kvstore envoy datapath policy'
 
-helm uninstall spiderpool --namespace kube-system
-helm install spiderpool spiderpool/spiderpool -n kube-system \
+helm uninstall spiderpool --namespace kube-system 
+helm install spiderpool spiderpool/spiderpool -n kube-system --version v0.8.3 \
     --set multus.multusCNI.defaultCniCRName="whq-cni-conf" \
     --set  coordinator.podCIDRType=none \
     --set global.imageRegistryOverride=ghcr.m.daocloud.io \
