@@ -5,17 +5,57 @@ kubectl patch crd/spiderendpoints.spiderpool.spidernet.io -p '{"metadata":{"fina
 
 kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.26.7 --skip-phases=addon/kube-proxy
 
+kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.23.17 --skip-phases=addon/kube-proxy
+
+kubeadm config images pull --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.23.17
+
+DOCKER_IMAGE_TAG=v1.14.5.2 make docker-cilium-image
+DOCKER_IMAGE_TAG=v1.14.7 make docker-operator-generic-image
+cat  /sys/kernel/debug/tracing/trace_pipe
+
+helm repo add cilium https://helm.cilium.io/
+
 helm uninstall cilium --namespace kube-system
-helm install cilium cilium/cilium --version 1.14.3 \
+sudo cilium cleanup
+
+helm install cilium /home/barry/work/helm-charts/cilium/ --version 1.14.5 \
 --namespace kube-system \
 --set kubeProxyReplacement=strict \
---set k8sServiceHost=10.211.55.3 \
+--set k8sServiceHost=10.211.55.11 \
 --set k8sServicePort=6443 \
+--set operator.replicas=1 \
 --set cni.exclusive=false \
 --set debug.enabled=true \
---set debug.verbose='flow kvstore envoy datapath policy'
+--set debug.verbose='flow kvstore envoy datapath policy' \
+--set image.useDigest=false \
+--set operator.image.useDigest=false \
+--set image.repository="quay.io/cilium/cilium" \
+--set image.tag="v1.14.5.1" \
+--set operator.image.repository="quay.io/cilium/operator" \
+--set operator.image.tag="v1.14.5" 
+  
+helm upgrade cilium /home/barry/work/helm-charts/cilium/ --version 1.14.5 \
+--namespace kube-system \
+--set kubeProxyReplacement=strict \
+--set k8sServiceHost=10.211.55.11 \
+--set k8sServicePort=6443 \
+--set operator.replicas=1 \
+--set cni.exclusive=false \
+--set debug.enabled=true \
+--set debug.verbose='flow kvstore envoy datapath policy' \
+--set image.useDigest=false \
+--set operator.image.useDigest=false \
+--set image.repository="quay.io/cilium/cilium" \
+--set image.tag="v1.14.5.2" \
+--set operator.image.repository="quay.io/cilium/operator" \
+--set operator.image.tag="v1.14.5" 
+ 
 
-helm uninstall spiderpool --namespace kube-system 
+
+helm repo add spiderpool https://spidernet-io.github.io/spiderpool
+helm repo update spiderpool
+
+helm uninstall spiderpool --namespace kube-system
 helm install spiderpool spiderpool/spiderpool -n kube-system --version v0.8.3 \
     --set multus.multusCNI.defaultCniCRName="whq-cni-conf" \
     --set  coordinator.podCIDRType=none \
@@ -30,7 +70,7 @@ metadata:
 spec:
   gateway: 10.211.55.1
   ips:
-  - "10.211.55.150-10.211.55.199"
+  - "10.211.55.200-10.211.55.254"
   subnet: 10.211.55.0/24
   multusName:
     - kube-system/whq-cni-conf
@@ -50,52 +90,4 @@ spec:
     master: ["enp0s5"]
     ippools:
       ipv4: ["ippool-enp0s5"]
-EOF
-
-
-ANNOTATION_MULTUS="v1.multus-cni.io/default-network: kube-system/macvlan-conf"
-NAME=ipvlan
-cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: ipvlan
-  labels:
-    app: ipvlan
-spec:
-  selector:
-    matchLabels:
-      app: ipvlan
-  template:
-    metadata:
-      name: ipvlan
-      labels:
-        app: ipvlan
-      annotations:
-        v1.multus-cni.io/default-network: kube-system/macvlan-conf
-    spec:
-      containers:
-      - name: test-app
-        image: nginx
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: 80
-          protocol: TCP
-EOF
-
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: ipvlan
-spec:
-  selector:
-    app: ipvlan
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: 80
 EOF

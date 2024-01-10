@@ -1,0 +1,11 @@
+level=info msg="Setting up BPF datapath" bpfClockSource=ktime bpfInsnSet="<nil>" subsys=datapath-loader
+level=debug msg="Launching compiler" args="[-emit-llvm -g -O2 --target=bpf -std=gnu89 -nostdinc -D__NR_CPUS__=32 -Wall -Wextra -Werror -Wshadow -Wno-address-of-packed-member -Wno-unknown-warning-option -Wno-gnu-variable-sized-type-not-at-end -Wdeclaration-after-statement -Wimplicit-int-conversion -Wenum-conversion -DCALLS_MAP=cilium_calls_lb -I/var/run/cilium/state/globals -I/var/run/cilium/state -I/var/lib/cilium/bpf -I/var/lib/cilium/bpf/include -c /var/lib/cilium/bpf/bpf_sock.c -o -]" subsys=datapath-loader target=clang
+level=error msg="Failed to compile bpf_sock.o: exit status 1" compiler-pid=126 linker-pid=127 subsys=datapath-loader
+level=warning msg="/var/lib/cilium/bpf/bpf_sock.c:695:33: error: too few arguments to function call, expected 3, have 2" subsys=datapath-loader
+level=warning msg="        __sock4_xlate_rev_test(ctx, ctx);" subsys=datapath-loader
+level=warning msg="        ~~~~~~~~~~~~~~~~~~~~~~         ^" subsys=datapath-loader
+level=warning msg="/var/lib/cilium/bpf/bpf_sock.c:576:1: note: '__sock4_xlate_rev_test' declared here" subsys=datapath-loader
+level=warning msg="static __always_inline int __sock4_xlate_rev_test(struct bpf_sock_addr *ctx," subsys=datapath-loader
+level=warning msg=^ subsys=datapath-loader
+level=warning msg="1 error generated." subsys=datapath-loader
+level=fatal msg="failed to compile bpf_sock.c" error="Failed to compile bpf_sock.o: exit status 1" subsys=datapath-loader
