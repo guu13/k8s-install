@@ -19,7 +19,7 @@ mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
-  "registry-mirrors": ["http://hub-mirror.c.163.com", "https://docker.mirrors.ustc.edu.cn"]
+  "registry-mirrors": ["https://docker.mirrors.ustc.edu.cn"]
 }
 EOF
 #注意，由于国内拉取镜像较慢，配置文件最后追加了阿里云镜像加速配置。
@@ -29,5 +29,3 @@ EOF
 # 重启docker服务
 systemctl daemon-reload && systemctl restart docker && systemctl enable docker
 
-
-------------- 

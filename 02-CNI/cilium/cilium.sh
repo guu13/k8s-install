@@ -1,9 +1,5 @@
 
-# 
-# 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
-#
-
-/sys/kernel/debug/tracing/trace_pipe
+###    /sys/kernel/debug/tracing/trace_pipe
 
 DOCKER_IMAGE_TAG=v1.14.5.2 make docker-cilium-image
 DOCKER_IMAGE_TAG=v1.14.7 make docker-operator-generic-image
