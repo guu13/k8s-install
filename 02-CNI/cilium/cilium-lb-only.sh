@@ -1,5 +1,6 @@
 kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.26.7
 
+/// 还没发现产品里需要这种模式
 /// LB-only模式旨在在既无法连接到kube-apiserver也无法连接到kvstore的负载均衡节点上运行。在此模式下，服务应通过Cilium REST API进行配置。
 /// The LB-only mode is intended to be run on load-balancing nodes which have connectivity neither to kube-apiserver nor kvstore.
 /// In this mode services are supposed to be configured via Cilium REST API.
