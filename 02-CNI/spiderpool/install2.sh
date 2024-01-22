@@ -13,6 +13,7 @@ kind: SpiderIPPool
 metadata:
   name: ippool-enp0s5
 spec:
+  default: true
   ips:
   - "10.211.55.200-10.211.55.254"
   subnet: 10.211.55.0/24
