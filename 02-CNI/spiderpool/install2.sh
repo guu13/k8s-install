@@ -1,7 +1,7 @@
 
 helm uninstall spiderpool --namespace kube-system
 
-helm install spiderpool spiderpool/spiderpool --namespace kube-system \
+helm install spiderpool spiderpool/spiderpool --namespace kube-system  --version v0.8.3 \
 --set multus.multusCNI.defaultCniCRName="whq-cni-conf" \
 --set global.imageRegistryOverride=ghcr.m.daocloud.io \
 --set spiderpoolAgent.loglevel=debug

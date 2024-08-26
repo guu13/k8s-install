@@ -1,5 +1,9 @@
-DOCKER_IMAGE_TAG=v1.14.5 make docker-cilium-image
+DOCKER_IMAGE_TAG=v1.16 make docker-cilium-image
 DOCKER_IMAGE_TAG=v1.14.5 make docker-operator-generic-image
+
+
+DOCKER_IMAGE_TAG=v1.16.0 make docker-cilium-image
+DOCKER_IMAGE_TAG=v1.16.0 make docker-operator-generic-image
 
 
 bpf_sock.o:

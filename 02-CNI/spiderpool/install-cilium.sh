@@ -9,16 +9,16 @@ kubeadm init  --image-repository=registry.cn-hangzhou.aliyuncs.com/google_contai
 
 kubeadm config images pull --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers --kubernetes-version=1.23.17
 
-DOCKER_IMAGE_TAG=v1.14.5.2 make docker-cilium-image
+DOCKER_IMAGE_TAG=v1.14.5.1 make docker-cilium-image
 DOCKER_IMAGE_TAG=v1.14.7 make docker-operator-generic-image
 cat  /sys/kernel/debug/tracing/trace_pipe
 
 helm repo add cilium https://helm.cilium.io/
+helm repo update cilium
 
 helm uninstall cilium --namespace kube-system
 sudo cilium cleanup
-
-helm install cilium /home/barry/work/helm-charts/cilium/ --version 1.14.5 \
+helm install cilium /home/barry/work/helm-charts/cilium/  --version 1.14.5 \
 --namespace kube-system \
 --set kubeProxyReplacement=strict \
 --set k8sServiceHost=10.211.55.11 \
@@ -68,6 +68,7 @@ kind: SpiderIPPool
 metadata:
   name: ippool-enp0s5
 spec:
+  default: true
   gateway: 10.211.55.1
   ips:
   - "10.211.55.200-10.211.55.254"

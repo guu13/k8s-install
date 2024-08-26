@@ -4,23 +4,24 @@ helm repo update
 
 
 helm uninstall hybridnet -n kube-system
-helm install  hybridnet hybridnet/hybridnet -n kube-system \
+helm install  hybridnet hybridnet/hybridnet -n kube-system --version 0.8.8 \
  --set manager.replicas=1 \
  --set webhook.replicas=1 \
- --set daemon.preferVlanInterfaces='eth1\,enp0s6' \
- --set daemon.preferVxlanInterfaces='eth0\,enp0s5' 
+ --set daemon.preferVlanInterfaces='enp0s5' \
+ --set daemon.preferVxlanInterfaces='enp0s5' 
 
 
 helm uninstall hybridnet -n kube-system
 helm install  hybridnet  -n kube-system \
  --set manager.replicas=1 \
  --set webhook.replicas=1 \
- --set daemon.preferVlanInterfaces='enp0s6\,enp0s5' \
+ --set typha.replicas=1 \
+ --set daemon.preferVlanInterfaces='enp0s5' \
  --set daemon.preferVxlanInterfaces='enp0s5' \
  ./
 
 ### for manager and webhoot
-kubectl label nodes node6 node-role.kubernetes.io/master=""
+kubectl label nodes node3 node-role.kubernetes.io/master=""
 
 ### for underlay network
 kubectl label nodes node7 network="underlay-network1"

@@ -20,7 +20,7 @@ kubectl set env daemonset/calico-node -n kube-system IP_AUTODETECTION_METHOD=int
 
 
 helm uninstall spiderpool --namespace kube-system 
-helm install spiderpool spiderpool/spiderpool --namespace kube-system  \
+helm install spiderpool spiderpool/spiderpool --namespace kube-system  --version v0.8.3 \
     --set coordinator.mode=overlay \
     --set global.imageRegistryOverride=ghcr.m.daocloud.io \
     --set spiderpoolAgent.loglevel=debug

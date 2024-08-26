@@ -19,15 +19,30 @@ repo_gpgcheck=1
 gpgkey=http://mirrors.cloud.aliyuncs.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
+############## 新版本源配置 ######
+cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes-new/core/stable/v1.29/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes-new/core/stable/v1.29/rpm/repodata/repomd.xml.key
+EOF
+setenforce 0
+yum install -y kubelet kubeadm kubectl
+systemctl enable kubelet && systemctl start kubelet
+
+
 
 yum list kubeadm --showduplicates | sort -r
 
 
 #安装kubeadm、kubelet、kubectl,注意这里默认安装当前最新版本v1.14.1:
 dnf remove -y kubeadm kubelet kubectl 
-dnf install -y kubeadm-1.26.7 kubelet-1.26.7 kubectl-1.26.7
+dnf install -y kubeadm-1.29.5 kubelet-1.29.5 kubectl-1.29.5
 systemctl enable kubelet && systemctl start kubelet
 
+dnf remove -y kubeadm kubelet kubectl
 dnf install -y kubeadm-1.23.17 kubelet-1.23.17 kubectl-1.23.17
 systemctl enable kubelet && systemctl start kubelet
 

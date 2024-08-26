@@ -28,25 +28,33 @@ Failed to decode layer: No decoder for layer type Payload
 #### monitor event type ： agent capture debug drop l7 policy-verdict recorder trace
 
 
-
-# ipv4 默认是 封装模式（--set tunnel=vxlan ）， 支持 Vxlan 和 Geneve 
-# Q: --set bpf.masquerade=true, 跳过 网络协议栈 启用bpf， 
-# A: level=info msg="BPF host routing requires enable-bpf-masquerade. Falling back to legacy host routing (enable-host-legacy-routing=true)." subsys=daemon
-
-helm delete cilium -nkube-system 
-helm install cilium cilium/cilium --version 1.11.0 \
-    --namespace kube-system \
-    --set debug.enabled=true \
-    --set debug.verbose=datapath \
-    --set operator.replicas=1 \
-    --set devices=enp0s5 \
-    --set bpf.masquerade=true \
-    --set kubeProxyReplacement=strict \
-    --set sockops.enabled=true \
-    --set k8sServiceHost=10.211.55.34 \
-    --set k8sServicePort=6443 
-
 # ipv4 native routing ， hybrid 模式
+helm repo add cilium https://helm.cilium.io/
+helm repo update cilium
+
+helm uninstall cilium --namespace kube-system
+sudo cilium cleanup
+helm install cilium /home/barry/work/helm-charts/cilium/  --version 1.14.5 \
+--namespace kube-system \
+--set kubeProxyReplacement=strict \
+--set k8sServiceHost=10.211.55.11 \
+--set k8sServicePort=6443 \
+--set devices=enp0s5 \
+--set tunnel=disabled \
+--set autoDirectNodeRoutes=true \
+--set sockops.enabled=true \
+--set ipv4NativeRoutingCIDR=10.0.0.0/8 \
+--set operator.replicas=1 \
+--set cni.exclusive=false \
+--set debug.enabled=true \
+--set debug.verbose='flow kvstore envoy datapath policy' \
+--set image.useDigest=false \
+--set operator.image.useDigest=false \
+--set image.repository="quay.io/cilium/cilium" \
+--set image.tag="v1.16.0" \
+--set operator.image.repository="quay.io/cilium/operator" \
+--set operator.image.tag="v1.16.0" 
+
 helm delete cilium -nkube-system 
 helm install cilium cilium/cilium --version 1.11.0 \
  --namespace kube-system \
@@ -119,35 +127,5 @@ helm upgrade cilium cilium/cilium --version 1.11.0 \
 level=fatal msg="Error while creating daemon" error="invalid daemon configuration: native routing cidr must be configured with option 
 --ipv4-native-routing-cidr in combination with --enable-ipv4-masquerade --tunnel=disabled --ipam=cluster-pool --enable-ipv4=true" subsys=daemon
 #############
-
-
-#### IPV6 ipv4 2stack
-
-helm install cilium cilium/cilium --version 1.11.0 \
- --namespace kube-system \
- --set debug.enabled=true \
- --set tunnel=disabled \
- --set operator.replicas=1 \
- --set kubeProxyReplacement=strict \
- --set k8sServiceHost=10.211.55.30 \
- --set k8sServicePort=6443 \
- --set ipv6.enabled=true \
- --set ipv4NativeRoutingCIDR=172.200.0.0/16 \
- --set ipam.operator.clusterPoolIPv4PodCIDR=172.200.0.0/16 \
- --set ipam.operator.clusterPoolIPv4MaskSize=26 \
- --set loadBalancer.acceleration=native \
- --set hubble.relay.enabled=true \
- --set hubble.ui.enabled=true 
-
-
-
--- fdb2:2c26:f4e4:0:b1ca:d2d0:e90f:f0f/64 , FDB2:2C26:F4E4:0000:0000:0000:0000:0000 ； FDB2:2C26:F4E4:0000:FFFF:FFFF:FFFF:FFFF
--- fd74:ca9b:0172:0019::/110 ； fd74:ca9b:0172:0019:0000:0000:0000:0000 ；fd74:ca9b:0172:0019:0000:0000:0003:ffff    ； 262,144
--- fd74:ca9b:0172:0018::/110 ； fd74:ca9b:0172:0018:0000:0000:0000:0000  ；fd74:ca9b:0172:0018:0000:0000:0003:ffff   ； 262,144
-
-
-kubectl exec -it -n kube-system cilium-9b5s2 -- cilium status --verbose
-kubectl exec -it -n kube-system cilium-9b5s2 -- cilium service list
-
 
 

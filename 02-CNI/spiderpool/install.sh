@@ -11,13 +11,13 @@ helm install spiderpool spiderpool/spiderpool --namespace kube-system \
 
 
 helm uninstall spiderpool --namespace kube-system
-helm install spiderpool --namespace kube-system ./
+helm install spiderpool --namespace kube-system  --version v0.8.3 ./
 
 
 helm uninstall cilium-chaining --namespace kube-system
 helm install cilium-chaining --namespace kube-system ./charts/cilium-chaining/
 
 
-registry.cn-hangzhou.aliyuncs.com/library/
+// registry.cn-hangzhou.aliyuncs.com/library/
 
 
